@@ -53,7 +53,7 @@ colorBottomRight = image[h,w]
 diff2 = np.subtract(colorBottomRight.astype(np.int16), colorBottomLeft.astype(np.int16))
 weightedBottomColor = np.divide(diff2.astype(np.float64), float(w))
 
-for y in range(h-5, h+1):
+for y in range(h-10, h+1):
 	prev = colorBottomLeft.astype(np.float64)
 	for x in range(0, w):
 		prev = np.add(prev.astype(np.float64), weightedBottomColor.astype(np.float64))
@@ -234,7 +234,14 @@ for c in cnts:
 final_img = image.copy()
 tl1[1] = max(tl1[1], 1.2*FaceDepth)
 tr1[1] = max(tr1[1], 1.2*FaceDepth)
-cv2.drawContours(final_img, [box1.astype("int")], -1, (0, 255, 0), 2)
+print ("ppm",ppm)
+ch = ppm*5
+tl1[0] = tl1[0] + ch
+tr1[0] = tr1[0] - ch
+bl1[0] = bl1[0] + ch
+br1[0] = br1[0] - ch
+
+cv2.drawContours(final_img, [np.array([tl1, tr1, br1, bl1]).astype("int")], -1, (0, 255, 0), 2)
 (tltrX1, tltrY1) = midpoint(tl1, tr1)
 (blbrX1, blbrY1) = midpoint(bl1, br1)
 (tlblX1, tlblY1) = midpoint(tl1, bl1)
@@ -249,8 +256,8 @@ dA1 = dist.euclidean((tltrX1, tltrY1), (blbrX1, blbrY1))
 dB1 = dist.euclidean((tlblX1, tlblY1), (trbrX1, trbrY1))
 print(dA1)
 print(dB1)
-dimA1 = dA1 / ppm
-dimB1 = dB1 / ppm
+dimA1 = dA1 / ppm 
+dimB1 = dB1 / ppm 
 
 cv2.putText(final_img, "{:.1f}cm".format(dimA1), (int(tltrX1 - 15), int(tltrY1 - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (255, 255, 255), 2)
 cv2.putText(final_img, "{:.1f}cm".format(dimB1), (int(trbrX1 + 10), int(trbrY1)), cv2.FONT_HERSHEY_SIMPLEX, 0.65, (255, 255, 255), 2)
