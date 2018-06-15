@@ -19,7 +19,7 @@ epoch = datetime.utcfromtimestamp(0)
 app = Flask(__name__)
 CORS(app)
 
-sizes = ["S", "M", "L", "XL", "XXL"]
+sizes = ["S", "M", "L"]
 
 class Listing:
     def __init__(self, brand, size, category):
@@ -85,7 +85,12 @@ measurement2size["51_71"] = "Reebok_L"
 measurement2size["42_67"] = "Nike_S"
 measurement2size["43_69"] = "Nike_M"
 measurement2size["45_71"] = "Nike_L"
-
+measurement2size["38_69"] = "Puma_S"
+measurement2size["40_72"] = "Puma_M"
+measurement2size["43_74"] = "Puma_L"
+measurement2size["40_69"] = "Tommy_S"
+measurement2size["43_70"] = "Tommy_M"
+measurement2size["45_71"] = "Tommy_L"
 
 size2measurements = {}
 for key in measurement2size:
@@ -206,7 +211,7 @@ def getMySizeFromMeasurements(size):
 
     lists = []
     for key in brandSizeToDiff:
-        lists.append(listingResponse(key + "_" + brandSizeToDiff[key].split("_")[0], brandSizeToDiff[key].split("_")[0]))
+        lists.append(listingResponse(key, brandSizeToDiff[key].split("_")[0]))
         # lists.append(Listing(key,brandSizeToDiff[key].split("_")[0],"tshirt"))
 
     return lists
@@ -233,7 +238,7 @@ def list():
 
     newL = []
     for l in listings:
-        newL.append(listingResponse(l.brand + "_" + l.size,l.size))
+        newL.append(listingResponse(l.brand,null))
 
     if brand is None and sizeType is None and size is None:
         return Response(newL).toJSON()
