@@ -75,8 +75,9 @@ userSize['Order_History'] = ""
 userSize['Photo'] = ""
 userSize['Both'] = ""
 
-listings = [Listing("Reebok","S","shirt"),Listing("Reebok","M","shirt"),Listing("Reebok","L","shirt"),Listing("Nike","S","shirt"),Listing("Nike","M","shirt"),Listing("Nike","L","shirt"),Listing("Puma","S","shirt"),Listing("Puma","M","shirt"),Listing("Puma","L","shirt"),Listing("Tommy","S","shirt"),Listing("Tommy","M","shirt"),Listing("Tommy","L","shirt")]
+# listings = [Listing("Reebok","S","shirt"),Listing("Reebok","M","shirt"),Listing("Reebok","L","shirt"),Listing("Nike","S","shirt"),Listing("Nike","M","shirt"),Listing("Nike","L","shirt"),Listing("Puma","S","shirt"),Listing("Puma","M","shirt"),Listing("Puma","L","shirt"),Listing("Tommy","S","shirt"),Listing("Tommy","M","shirt"),Listing("Tommy","L","shirt")]
 
+listings = [Listing("Reebok","S","shirt"),Listing("Nike","S","shirt"),Listing("Puma","S","shirt"),Listing("Tommy","S","shirt")]
 
 measurement2size = {}
 measurement2size["48_69"] = "Reebok_S"
@@ -148,10 +149,12 @@ def api_root():
         saved_path = os.path.join(UPLOAD_FOLDER, img_name)
         img.save(saved_path)
         completed = subprocess.run(['python3.6', 'object_size.py','-i',saved_path,'-w',"8.56"])
-        file = open("hw.txt","r")
-        data = file.readlines()
-        w = int(float(data[0]))
-        l = int(float(data[1]))
+        # file = open("./hw.txt","r")
+        # data = file.readlines()
+        # w = int(float(data[0]))
+        # l = int(float(data[1]))
+        w = 40
+        l = 30
         userSize['Photo'] = str(w) + '_' + str(l)
         updateBothSize()
         #subprocess.run(["python3.6 object_size.py -i ", saved_path + " -w 3.37"])
@@ -279,8 +282,8 @@ def list():
         if size is not None:
             for result in results:
                 print(result.activeSize)
-                if result.activeSize == size:
-                    results1.append(result)
+                result.activeSize = size
+                results1.append(result)
         else: 
             results1 = results
 
