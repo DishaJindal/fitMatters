@@ -20,7 +20,7 @@ epoch = datetime.utcfromtimestamp(0)
 app = Flask(__name__)
 CORS(app)
 
-sizes = ["S", "M", "L"]
+sizes = ["S", "M", "L","XL"]
 
 class Listing:
     def __init__(self, brand, size, category):
@@ -84,15 +84,19 @@ measurement2size = {}
 measurement2size["48_69"] = "Reebok_S"
 measurement2size["50_69"] = "Reebok_M"
 measurement2size["51_71"] = "Reebok_L"
+measurement2size["52_74"] = "Reebok_XL"
 measurement2size["42_67"] = "Nike_S"
 measurement2size["43_69"] = "Nike_M"
 measurement2size["45_71"] = "Nike_L"
+measurement2size["46_72 "] = "Nike_XL"
 measurement2size["38_69"] = "Puma_S"
 measurement2size["40_72"] = "Puma_M"
 measurement2size["43_74"] = "Puma_L"
+measurement2size["44_74"] = "Puma_XL"
 measurement2size["40_69"] = "Tommy_S"
 measurement2size["43_70"] = "Tommy_M"
 measurement2size["45_72"] = "Tommy_L"
+measurement2size["46_73"] = "Tommy_XL"
 
 size2measurements = {}
 for key in measurement2size:
