@@ -71,11 +71,11 @@ class Order:
 
 
 userSize = {}
-userSize['Order_History'] = "38_27"
-userSize['Photo'] = "37_27"
-userSize['Both'] = "37_27"
+userSize['Order_History'] = ""
+userSize['Photo'] = ""
+userSize['Both'] = ""
 
-listings = [Listing("Reebok","S","shirt"),Listing("Reebok","M","shirt"),Listing("Reebok","L","shirt"),Listing("Nike","S","shirt"),Listing("Nike","M","shirt"),Listing("Nike","L","shirt")]
+listings = [Listing("Reebok","S","shirt"),Listing("Reebok","M","shirt"),Listing("Reebok","L","shirt"),Listing("Nike","S","shirt"),Listing("Nike","M","shirt"),Listing("Nike","L","shirt"),Listing("Puma","S","shirt"),Listing("Puma","M","shirt"),Listing("Puma","L","shirt"),Listing("Tommy","S","shirt"),Listing("Tommy","M","shirt"),Listing("Tommy","L","shirt")]
 
 
 measurement2size = {}
@@ -90,7 +90,7 @@ measurement2size["40_72"] = "Puma_M"
 measurement2size["43_74"] = "Puma_L"
 measurement2size["40_69"] = "Tommy_S"
 measurement2size["43_70"] = "Tommy_M"
-measurement2size["45_71"] = "Tommy_L"
+measurement2size["45_72"] = "Tommy_L"
 
 size2measurements = {}
 for key in measurement2size:
@@ -127,13 +127,15 @@ for orderId in order2Score:
 print(avgWidth/scoreSum)
 print(avgLength/scoreSum)
 
+userSize['Order_History'] = str(int(avgWidth/scoreSum)) + '_' + str(int(avgLength/scoreSum))
+
 @app.route("/")
 def hello():
     return "Hello World!"
 
 
-
-UPLOAD_FOLDER = '/Users/abhishek.krishan/scripts/hackday'
+UPLOAD_FOLDER = '/Users/sagar.sahni/Desktop'
+# UPLOAD_FOLDER = '/Users/abhishek.krishan/scripts/hackday'
 
 
 
@@ -151,8 +153,9 @@ def api_root():
         w = int(float(data[0]))
         l = int(float(data[1]))
         userSize['Photo'] = str(w) + '_' + str(l)
+        updateBothSize()
         #subprocess.run(["python3.6 object_size.py -i ", saved_path + " -w 3.37"])
-        return "DONE"
+        return saved_path
         # return send_from_directory(UPLOAD_FOLDER,img_name, as_attachment=True)
     else:
         return "Where is the image?"
@@ -164,8 +167,14 @@ def updateSize():
     args = request.args
     width = args['width']
     length = args['length']
-    userSize['IMAGE'] = str(width) + '_' + str(length)
+    userSize['Photo'] = str(width) + '_' + str(length)
+    updateBothSize()
     return "DONE"
+
+def updateBothSize():
+    width = int( int(userSize['Photo'].split("_")[0]) * 0.3  +  int(userSize['Order_History'].split("_")[0]) * 0.7 ) 
+    length = int( int(userSize['Photo'].split("_")[1]) * 0.3  +  int(userSize['Order_History'].split("_")[1]) * 0.7 ) 
+    userSize['Both'] = str(width) + '_' + str(length)
 
 
 def getMySizeFromMeasurements(size):
@@ -214,6 +223,7 @@ def getMySizeFromMeasurements(size):
         lists.append(listingResponse(key, brandSizeToDiff[key].split("_")[0]))
         # lists.append(Listing(key,brandSizeToDiff[key].split("_")[0],"tshirt"))
 
+
     return lists
 
 
@@ -238,7 +248,7 @@ def list():
 
     newL = []
     for l in listings:
-        newL.append(listingResponse(l.brand,null))
+        newL.append(listingResponse(l.brand,None))
 
     if brand is None and sizeType is None and size is None:
         return Response(newL).toJSON()
