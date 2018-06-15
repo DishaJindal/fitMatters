@@ -162,7 +162,7 @@ def api_root():
         userSize['Photo'] = str(w) + '_' + str(l)
         updateBothSize()
         resp = {}
-        resp["url"] = "http://127.0.0.1:8080/image?dir=" + di 
+        resp["url"] = "http://127.0.0.1:8080/image?dir=" + di +"&a=" + str(datetime.today())
         resp["width"] = w
         resp["length"] = l
         return jsonify(resp) 
@@ -179,7 +179,9 @@ def image():
     folderName = d[:index]
     print(fileName)
     print(folderName)
-    return send_from_directory(folderName,fileName, as_attachment=True)
+    response = send_from_directory(folderName,fileName, as_attachment=True)
+    response.cache_control.max_age = 1
+    return response
     
 
 @app.route("/updateSize")
