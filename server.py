@@ -156,8 +156,8 @@ def api_root():
         completed = subprocess.run(['python3.6', 'object_size.py','-i',saved_path,'-w',"8.56"])
         file = open("./hw.txt","r")
         data = file.readlines()
-        w = int(float(data[0]))
-        l = int(float(data[1]))
+        l = int(float(data[0]))
+        w = int(float(data[1]))
         di = data[2]
         userSize['Photo'] = str(w) + '_' + str(l)
         updateBothSize()
