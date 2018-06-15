@@ -162,7 +162,7 @@ def api_root():
         userSize['Photo'] = str(w) + '_' + str(l)
         updateBothSize()
         resp = {}
-        resp["url"] = "http://127.0.0.1:8080/image?dir=" + saved_path 
+        resp["url"] = "http://127.0.0.1:8080/image?dir=" + di 
         resp["width"] = w
         resp["length"] = l
         return jsonify(resp) 
