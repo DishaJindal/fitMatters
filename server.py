@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 from flask import jsonify
+from flask import send_from_directory
 import json
 import datetime
 from datetime import datetime, timedelta
@@ -19,7 +20,7 @@ epoch = datetime.utcfromtimestamp(0)
 app = Flask(__name__)
 CORS(app)
 
-sizes = ["S", "M", "L"]
+sizes = ["S", "M", "L","XL"]
 
 class Listing:
     def __init__(self, brand, size, category):
@@ -83,15 +84,19 @@ measurement2size = {}
 measurement2size["48_69"] = "Reebok_S"
 measurement2size["50_69"] = "Reebok_M"
 measurement2size["51_71"] = "Reebok_L"
+measurement2size["52_74"] = "Reebok_XL"
 measurement2size["42_67"] = "Nike_S"
 measurement2size["43_69"] = "Nike_M"
 measurement2size["45_71"] = "Nike_L"
+measurement2size["46_72 "] = "Nike_XL"
 measurement2size["38_69"] = "Puma_S"
 measurement2size["40_72"] = "Puma_M"
 measurement2size["43_74"] = "Puma_L"
+measurement2size["44_74"] = "Puma_XL"
 measurement2size["40_69"] = "Tommy_S"
 measurement2size["43_70"] = "Tommy_M"
 measurement2size["45_72"] = "Tommy_L"
+measurement2size["46_73"] = "Tommy_XL"
 
 size2measurements = {}
 for key in measurement2size:
@@ -135,8 +140,8 @@ def hello():
     return "Hello World!"
 
 
-UPLOAD_FOLDER = '/Users/sagar.sahni/Desktop'
-# UPLOAD_FOLDER = '/Users/abhishek.krishan/scripts/hackday'
+# UPLOAD_FOLDER = '/Users/sagar.sahni/Desktop'
+UPLOAD_FOLDER = '/Users/abhishek.krishan/scripts/hackday'
 
 
 
@@ -149,21 +154,33 @@ def api_root():
         saved_path = os.path.join(UPLOAD_FOLDER, img_name)
         img.save(saved_path)
         completed = subprocess.run(['python3.6', 'object_size.py','-i',saved_path,'-w',"8.56"])
-        # file = open("./hw.txt","r")
-        # data = file.readlines()
-        # w = int(float(data[0]))
-        # l = int(float(data[1]))
-        w = 40
-        l = 30
+        file = open("./hw.txt","r")
+        data = file.readlines()
+        l = int(float(data[0]))
+        w = int(float(data[1]))
+        di = data[2]
         userSize['Photo'] = str(w) + '_' + str(l)
         updateBothSize()
-        #subprocess.run(["python3.6 object_size.py -i ", saved_path + " -w 3.37"])
-        return saved_path
-        # return send_from_directory(UPLOAD_FOLDER,img_name, as_attachment=True)
+        resp = {}
+        resp["url"] = "http://127.0.0.1:8080/image?dir=" + di 
+        resp["width"] = w
+        resp["length"] = l
+        return jsonify(resp) 
     else:
         return "Where is the image?"
 
 
+@app.route('/image')
+def image():
+    d = request.args['dir']
+    sl = d.split("/")
+    fileName = sl[len(sl) - 1]
+    index = d.find(fileName)
+    folderName = d[:index]
+    print(fileName)
+    print(folderName)
+    return send_from_directory(folderName,fileName, as_attachment=True)
+    
 
 @app.route("/updateSize")
 def updateSize():
